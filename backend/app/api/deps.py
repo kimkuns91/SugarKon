@@ -1,0 +1,24 @@
+from fastapi import Depends, HTTPException, status
+from jose import jwt
+from pydantic import ValidationError
+from sqlalchemy.orm import Session
+
+from app.db.session import get_db
+from app.db.redis import get_redis
+from app.core.auth import get_current_user, get_optional_current_user
+
+# DB 세션 의존성
+def get_db_session():
+    return get_db()
+
+# Redis 클라이언트 의존성
+def get_redis_client():
+    return get_redis()
+
+# 현재 인증된 사용자 의존성
+def get_authenticated_user():
+    return get_current_user
+
+# 선택적 인증 사용자 의존성 (토큰이 없어도 에러는 아님)
+def get_optional_authenticated_user():
+    return get_optional_current_user 
