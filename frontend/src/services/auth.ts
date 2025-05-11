@@ -39,12 +39,20 @@ export const refreshToken = async (refreshTokenValue: string): Promise<Token> =>
 
 // 로그아웃
 export const logout = async (): Promise<void> => {
-  try {
-    await api.post('/auth/logout');
-  } finally {
-    // API 요청 성공 여부와 관계없이 로컬 쿠키는 삭제
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
+  const accessToken = Cookies.get('access_token');
+  
+  // 쿠키 제거는 무조건 실행
+  Cookies.remove('access_token');
+  Cookies.remove('refresh_token');
+  
+  // 토큰이 있을 때만 서버에 로그아웃 요청
+  if (accessToken) {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('로그아웃 API 호출 중 오류:', error);
+      // 오류가 발생해도 진행 (쿠키는 이미 삭제됨)
+    }
   }
 };
 

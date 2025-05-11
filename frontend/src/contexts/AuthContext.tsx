@@ -148,9 +148,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     try {
       await logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
       setState({
         isAuthenticated: false,
         user: null,
@@ -159,6 +156,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       
       router.push('/login'); // 로그인 페이지로 리다이렉트
+    } catch (error) {
+      console.error('Logout error:', error);
+      // 오류가 발생해도 인증 상태 초기화
+      setState({
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: null,
+      });
+      
+      router.push('/login');
     }
   };
   

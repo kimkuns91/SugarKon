@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Header } from "@/components/Header";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
@@ -20,7 +21,10 @@ export default function RootLayout({
     <html lang="ko">
       <body className={inter.className}>
         <AuthProvider>
-          {children}
+          <Header />
+          <main className="container mx-auto p-4">
+            {children}
+          </main>
         </AuthProvider>
       </body>
     </html>

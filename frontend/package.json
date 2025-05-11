@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.75.7",
+    "@tanstack/react-query-devtools": "^5.75.7",
     "axios": "^1.9.0",
     "js-cookie": "^3.0.5",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
-    "swr": "^2.3.3"
+    "swr": "^2.3.3",
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
