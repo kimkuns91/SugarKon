@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
 
 const RegisterForm: React.FC = () => {
-  const { register: registerUser, error, loading, clearError } = useAuth();
+  const { register: registerUser, registerError, isRegistering } = useAuth();
   const [formError, setFormError] = useState<string | null>(null);
   
   const { 
@@ -19,7 +19,6 @@ const RegisterForm: React.FC = () => {
   
   const onSubmit = async (data: RegisterRequest) => {
     setFormError(null);
-    clearError();
     
     try {
       await registerUser(data);
@@ -34,9 +33,9 @@ const RegisterForm: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-6 text-center">회원가입</h2>
         
-        {(error || formError) && (
+        {(registerError || formError) && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error || formError}
+            {formError || (registerError instanceof Error ? registerError.message : String(registerError))}
           </div>
         )}
         
@@ -136,12 +135,12 @@ const RegisterForm: React.FC = () => {
         <div className="flex items-center justify-between">
           <button
             className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+              isRegistering ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             type="submit"
-            disabled={loading}
+            disabled={isRegistering}
           >
-            {loading ? '처리 중...' : '회원가입'}
+            {isRegistering ? '처리 중...' : '회원가입'}
           </button>
           <a
             className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"

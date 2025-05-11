@@ -9,4 +9,5 @@ python-multipart>=0.0.6
 redis>=4.5.4
 python-dotenv>=1.0.0
 psycopg2-binary>=2.9.5
-email-validator>=2.0.0 
+email-validator>=2.0.0
+httpx>=0.24.0 

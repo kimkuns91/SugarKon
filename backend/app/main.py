@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.api import api_router
 from app.core.config import settings
-from app.db.session import engine, Base
+from app.db.session import engine
+from app.db.base import Base  # 이 import가 중요합니다 - 모든 모델을 등록합니다
 
 # 앱 초기화
 app = FastAPI(
@@ -14,7 +15,7 @@ app = FastAPI(
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 프로덕션에서는 실제 도메인으로 제한해야 합니다
+    allow_origins=[settings.FRONTEND_URL],  # 프론트엔드 URL만 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,6 +28,9 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 @app.on_event("startup")
 async def init_db():
     # SQLAlchemy 모델에서 테이블 생성
+    # import logging
+    # logging.basicConfig()
+    # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
     Base.metadata.create_all(bind=engine)
 
 # 기본 라우트

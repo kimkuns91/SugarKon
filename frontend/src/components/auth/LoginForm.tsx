@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 
 import { LoginRequest } from '@/types/auth';
+import { SocialLogin } from './SocialLogin';
 import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
 
 const LoginForm: React.FC = () => {
-  const { login, error, loading, clearError } = useAuth();
+  const { login, loginError, isLoggingIn } = useAuth();
   const [formError, setFormError] = useState<string | null>(null);
   
   const { 
@@ -18,7 +19,6 @@ const LoginForm: React.FC = () => {
   
   const onSubmit = async (data: LoginRequest) => {
     setFormError(null);
-    clearError();
     
     try {
       await login(data);
@@ -33,9 +33,9 @@ const LoginForm: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-6 text-center">로그인</h2>
         
-        {(error || formError) && (
+        {(loginError || formError) && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error || formError}
+            {formError || (loginError instanceof Error ? loginError.message : String(loginError))}
           </div>
         )}
         
@@ -78,12 +78,12 @@ const LoginForm: React.FC = () => {
         <div className="flex items-center justify-between">
           <button
             className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+              isLoggingIn ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             type="submit"
-            disabled={loading}
+            disabled={isLoggingIn}
           >
-            {loading ? '로그인 중...' : '로그인'}
+            {isLoggingIn ? '로그인 중...' : '로그인'}
           </button>
           <a
             className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
@@ -91,6 +91,10 @@ const LoginForm: React.FC = () => {
           >
             회원가입
           </a>
+        </div>
+        
+        <div className="mt-6">
+          <SocialLogin />
         </div>
       </form>
     </div>

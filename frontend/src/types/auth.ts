@@ -6,6 +6,8 @@ export interface User {
   is_active: boolean;
   created_at: string;
   updated_at?: string;
+  profile_image?: string;
+  oauth_provider?: 'kakao' | 'google' | null;
 }
 
 // 인증 상태 타입 정의

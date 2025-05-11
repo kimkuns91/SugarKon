@@ -33,6 +33,8 @@ services:
     depends_on:
       - redis
       - postgres
+    env_file:
+      - ./backend/.env
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379

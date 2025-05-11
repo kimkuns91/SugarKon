@@ -13,7 +13,11 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     email: EmailStr
     username: str
-    password: str
+    password: Optional[str] = None
+    oauth_provider: Optional[str] = None
+    oauth_id: Optional[str] = None
+    name: Optional[str] = None
+    profile_image: Optional[str] = None
 
 # 사용자 정보 업데이트 시 사용되는 모델
 class UserUpdate(UserBase):

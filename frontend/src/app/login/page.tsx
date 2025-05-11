@@ -1,7 +1,23 @@
+'use client';
+
+import React, { useEffect } from 'react';
+
 import LoginForm from '@/components/auth/LoginForm';
-import React from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
+  const { user } = useAuth();
+  const router = useRouter();
+  
+  // 이미 로그인된 사용자는 홈으로 리다이렉트
+  useEffect(() => {
+    console.log('로그인 페이지 - 인증 상태:', { user });
+    if (user) {
+      router.push('/');
+    }
+  }, [user, router]);
+  
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

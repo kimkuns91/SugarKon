@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from jose import jwt
@@ -15,9 +15,9 @@ def create_access_token(
 ) -> str:
     """액세스 토큰 생성"""
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
+        expire = datetime.now(timezone.utc) + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     
@@ -33,10 +33,10 @@ def create_refresh_token(
 ) -> str:
     """리프레시 토큰 생성"""
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
-            days=settings.REFRESH_TOKEN_EXPIRE_DAYS
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
         )
     
     to_encode = {"exp": expire, "sub": str(subject), "type": "refresh"}

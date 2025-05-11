@@ -2,11 +2,11 @@
 "use client";
 
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { useState } from 'react';
 
 export function Header() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   const handleLogout = async () => {
@@ -32,7 +32,7 @@ export function Header() {
             영화 목록
           </Link>
           
-          {isAuthenticated ? (
+          {user ? (
             <>
               <Link href="/account" className="hover:text-gray-300">
                 {user?.username || '내 계정'}
