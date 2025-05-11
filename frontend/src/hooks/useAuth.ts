@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
 import { useAuthStore } from '@/stores/authStore';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 /**
  * 인증 관련 기능을 제공하는 커스텀 훅
@@ -13,10 +14,14 @@ import { useRouter } from 'next/navigation';
 export function useAuth() {
   const { user, setUser } = useAuthStore();
   const router = useRouter();
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   
   // 일반 로그인
   const login = async (credentials: LoginRequest) => {
     try {
+      setIsLoggingIn(true);
+      setLoginError(null);
       // API 호출로 로그인 수행
       await loginApi(credentials);
       
@@ -29,8 +34,11 @@ export function useAuth() {
       return true;
     } catch (error) {
       console.error('로그인 오류:', error);
+      setLoginError('로그인에 실패했습니다.');
       toast.error('로그인에 실패했습니다.');
       return false;
+    } finally {
+      setIsLoggingIn(false);
     }
   };
   
@@ -135,6 +143,8 @@ export function useAuth() {
     register,
     logout,
     handleSocialLoginCallback,
-    checkAuthStatus
+    checkAuthStatus,
+    loginError,
+    isLoggingIn
   };
 } 
