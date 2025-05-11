@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post("/", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
 def create_user(
     user_in: UserCreate,
-    db: Session = Depends(get_db_session())
+    db: Session = get_db_session
 ) -> Any:
     """새 사용자 등록"""
     # 이메일 또는 사용자명 중복 확인
@@ -37,8 +37,8 @@ def create_user(
 
 @router.get("/me", response_model=UserSchema)
 def get_current_user(
-    current_user: dict = Depends(get_authenticated_user()),
-    db: Session = Depends(get_db_session())
+    current_user: dict = get_authenticated_user,
+    db: Session = get_db_session
 ) -> Any:
     """현재 로그인된 사용자 정보 조회"""
     user = user_service.get_by_id(db, user_id=current_user["id"])
@@ -52,8 +52,8 @@ def get_current_user(
 @router.put("/me", response_model=UserSchema)
 def update_current_user(
     user_in: UserUpdate,
-    current_user: dict = Depends(get_authenticated_user()),
-    db: Session = Depends(get_db_session())
+    current_user: dict = get_authenticated_user,
+    db: Session = get_db_session
 ) -> Any:
     """현재 로그인된 사용자 정보 업데이트"""
     user = user_service.get_by_id(db, user_id=current_user["id"])

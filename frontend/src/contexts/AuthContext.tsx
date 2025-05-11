@@ -1,10 +1,29 @@
-import { AuthState, User } from '@/types/auth';
+"use client";
+
 import { LoginRequest, RegisterRequest } from '@/types/auth';
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { getCurrentUser, login, logout, register } from '@/services/auth';
 
+import { AuthState } from '@/types/auth';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+
+// API 에러 인터페이스 정의
+interface ApiError {
+  response?: {
+    data?: {
+      detail?: string;
+    };
+  };
+  message?: string;
+}
+
+// API 에러 타입 가드 함수
+function isApiError(error: unknown): error is ApiError {
+  return typeof error === 'object' && 
+         error !== null && 
+         ('response' in error || 'message' in error);
+}
 
 // 초기 인증 상태
 const initialAuthState: AuthState = {
@@ -85,11 +104,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       
       router.push('/'); // 홈으로 리다이렉트
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = '로그인에 실패했습니다.';
+      if (isApiError(error)) {
+        errorMessage = error.response?.data?.detail || errorMessage;
+      }
       setState({
         ...state,
         loading: false,
-        error: error.response?.data?.detail || '로그인에 실패했습니다.',
+        error: errorMessage,
       });
     }
   };
@@ -106,11 +129,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         username: userData.username,
         password: userData.password,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = '회원가입에 실패했습니다.';
+      if (isApiError(error)) {
+        errorMessage = error.response?.data?.detail || errorMessage;
+      }
       setState({
         ...state,
         loading: false,
-        error: error.response?.data?.detail || '회원가입에 실패했습니다.',
+        error: errorMessage,
       });
     }
   };

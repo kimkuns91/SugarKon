@@ -15,8 +15,8 @@ router = APIRouter()
 @router.post("/login", response_model=Token)
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db_session()),
-    redis_client: redis.Redis = Depends(get_redis_client())
+    db: Session = get_db_session,
+    redis_client: redis.Redis = get_redis_client
 ) -> Any:
     """사용자 로그인 및 토큰 발급"""
     tokens = auth_service.login(
@@ -38,8 +38,8 @@ def login(
 @router.post("/refresh", response_model=Token)
 def refresh_token(
     refresh_token_in: RefreshToken,
-    db: Session = Depends(get_db_session()),
-    redis_client: redis.Redis = Depends(get_redis_client())
+    db: Session = get_db_session,
+    redis_client: redis.Redis = get_redis_client
 ) -> Any:
     """리프레시 토큰을 이용해 새 액세스 토큰 발급"""
     tokens = auth_service.refresh_tokens(
@@ -59,9 +59,9 @@ def refresh_token(
 
 @router.post("/logout", status_code=status.HTTP_200_OK)
 def logout(
-    current_user: dict = Depends(get_authenticated_user()),
+    current_user: dict = get_authenticated_user,
     token: str = Depends(get_current_user),
-    redis_client: redis.Redis = Depends(get_redis_client())
+    redis_client: redis.Redis = get_redis_client
 ) -> Any:
     """사용자 로그아웃"""
     success = auth_service.logout(

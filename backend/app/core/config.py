@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 import os
-from pydantic import BaseSettings, validator
+from pydantic_settings import BaseSettings
+from pydantic import validator
 from dotenv import load_dotenv
 
 # .env 파일 로드
